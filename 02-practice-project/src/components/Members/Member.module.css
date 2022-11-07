@@ -1,0 +1,8 @@
+.member {
+  width: 100%;
+  margin: 5px 0;
+  padding: 5px;
+  border: 1px solid darkgray;
+  font: 20px;
+  font-weight: 600;
+}

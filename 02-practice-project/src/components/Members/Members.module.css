@@ -1,0 +1,10 @@
+.members {
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.members ul {
+  list-style: none;
+  padding-left: 0px;
+}

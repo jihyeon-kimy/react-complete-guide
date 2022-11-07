@@ -1,0 +1,17 @@
+.new-member {
+  width: 90%;
+  margin: auto;
+  padding: 20px;
+}
+
+.new-member__form label {
+  display: block;
+  font: 20px;
+  font-weight: 600;
+}
+
+.new-member__form input {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+}

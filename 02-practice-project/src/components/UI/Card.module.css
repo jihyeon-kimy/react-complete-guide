@@ -1,0 +1,15 @@
+.card {
+  /* width: 90%; */
+  /* margin: auto; */
+  /* padding: 20px; */
+  border-radius: 12px;
+  background-color: white;
+}
+
+/* card CSS에는 위치나 크기보다는 큰 틀을 만든다는 느낌의 CSS만 적용하자 */
+
+@media (min-width: 768px) {
+  .card {
+    width: 50%;
+  }
+}

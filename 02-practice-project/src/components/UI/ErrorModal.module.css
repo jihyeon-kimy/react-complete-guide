@@ -1,0 +1,37 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #00000094;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+}
+
+.title {
+  padding: 10px;
+  background-color: salmon;
+  border-radius: 12px 12px 0 0;
+}
+
+.title h2 {
+  margin: 0;
+}
+
+.content {
+  padding: 20px;
+}
+
+.action {
+  position: relative;
+  left: 70%;
+  /* display: flex;
+  justify-content: flex-end; */
+  /* 갓 멘토님은 flex를 써서 해결했는데, 나는 이게 안먹음. 왜 그런지는 모르겠음 */
+}
