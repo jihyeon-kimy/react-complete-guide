@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
@@ -11,16 +11,26 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
+  // 디바운싱(그룸화)
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      // console.log("checking from validity!");
+      setFormIsValid(enteredEmail.includes("@") && enteredPassword.trim().length > 6);
+    }, 300);
+
+    // cleanup함수 : 이펙트 함수가 실행되기 전에 실행된다(첫번째 제외)
+    return () => {
+      // console.log("cleanup");
+      clearTimeout(identifier);
+    };
+  }, [enteredEmail, enteredPassword]);
+
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
-
-    setFormIsValid(event.target.value.includes("@") && enteredPassword.trim().length > 6);
   };
 
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
-
-    setFormIsValid(event.target.value.trim().length > 6 && enteredEmail.includes("@"));
   };
 
   const validateEmailHandler = () => {
