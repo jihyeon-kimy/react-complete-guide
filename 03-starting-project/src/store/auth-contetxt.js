@@ -1,10 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // 컴포넌트는 아니지만, 컴포넌트를 포함할 객체이기 때문에 파스칼 케이스로 표기
 const AuthContext = React.createContext({
   isLoggedIn: false, // 초기값 false
   onLogout: () => {}, // IDE 자동 완성을 더 좋게 만들기 위해서, 더미 함수를 넣어주는 것
+  onLogin: (email, password) => {},
 });
+
+export const AuthContextProvider = (props) => {
+  const [isLoggedIn, setIsLoggedIn] = useState();
+
+  useEffect(() => {
+    const storedUserLoggedInInfromation = localStorage.getItem("isLoggedIn");
+
+    if (storedUserLoggedInInfromation === "1") {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const logoutHandler = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+  };
+
+  const loginHandler = () => {
+    localStorage.setItem("isLoggedIn", "1");
+    setIsLoggedIn(true);
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{ isLoggedIn: isLoggedIn, onLogout: logoutHandler, onLogin: loginHandler }}>
+      {props.children}
+    </AuthContext.Provider>
+  );
+};
 
 export default AuthContext;
 
