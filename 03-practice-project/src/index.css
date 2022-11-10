@@ -4,4 +4,10 @@
 
 body {
   margin: 0;
+  background-color: gray;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0px;
 }

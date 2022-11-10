@@ -1,0 +1,45 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid gray;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.item--border-none {
+  border: none;
+}
+
+.item-desc h3 {
+  margin: 0;
+}
+
+.item-desc__price {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: brown;
+  margin-right: 1rem;
+}
+
+.item-desc__amount {
+  font-size: 0.7rem;
+  border: 1px solid gray;
+  padding: 0 0.3rem;
+}
+
+.item-buttons button {
+  padding: 0 1rem;
+  margin-left: 0.5rem;
+  background-color: transparent;
+  color: brown;
+  border: 1px solid brown;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.item-buttons button:hover,
+.item-buttons button:active {
+  background-color: brown;
+  color: white;
+}
