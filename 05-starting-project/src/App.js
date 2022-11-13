@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import MoviesList from "./components/MoviesList";
 import "./App.css";
@@ -9,7 +9,7 @@ function App() {
   const [error, setError] = useState(null);
 
   // 1. async와 await
-  async function fetchMovieHandler() {
+  const fetchMovieHandler = useCallback(async () => {
     setIsLoading(true); // 로딩이 시작할때 상태변화 발생
     setError(null); // 이전에 받았을 수도 있는 오류를 초기화
     try {
@@ -34,7 +34,16 @@ function App() {
       setError(error.message); // 에러 호출
     }
     setIsLoading(false);
-  }
+  }, []);
+
+  // 최초 로딩 시, 데이터 가져오기
+  // useEffect 함수 내에서 사용하는 모든 의존성을 의존성 배열에 표시해두는 것이 가장 좋다. 여기서는 fetchMovieHandler가 대상. 허나 이것은 함수이고 객체이기 때문에, 컴포넌트 재 렌더링 시 함수 역시 바뀐다는 문제가 있다.
+  // 해결책 1. 의존성 배열을 비운다.(하지만 함수가 외부 상태를 사용하면 의도치 않은 버그가 생길 수 있다.)
+  // 해결책 2. useCallback (가장 좋은 해결책)
+
+  useEffect(() => {
+    fetchMovieHandler();
+  }, [fetchMovieHandler]);
 
   // 2. then 체인 사용
   // function fetchMovieHandler() {
