@@ -1,29 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const SimpleInput = (props) => {
-  const nameInputRef = useRef();
   const [enteredName, setEnteredName] = useState("");
-
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
-  useEffect(() => {
-    if (enteredNameIsValid) {
-      console.log("Name Input is valid!");
-    }
-  }, [enteredNameIsValid]);
+  // const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
+  // 상수로 변경하여 리팩토링할 수 있다. enteredNameIsValid는 enteredName라는 상태로부터 얻어낼 수 있기 때문이다. enteredName과 enteredNameTouched이 바뀔 때마다 전체 컴포넌트가 다시 실행되기 때문에, enteredNameIsValid는 최신 상태를 반영하게 된다.
+  // 처음에 작성했던 if(event.target.value.trim() !== ""){setEnteredNameIsValid(true);} / if(enteredName.trim() === ""){setEnteredNameIsValid(false);} 모두 생략가능
+  const enteredNameIsValid = enteredName.trim() !== "";
+  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
   };
 
   const nameInputBlurHandler = (event) => {
-    setEnteredNameTouched(true); // input이 포커스를 잃었다는 것은 그 전에 사용자가 건드렸다는 것이기 때문에
-
-    if (enteredName.trim() === "") {
-      setEnteredNameIsValid(false);
-      return;
-    }
+    setEnteredNameTouched(true);
   };
 
   const formSubmissionHandler = (event) => {
@@ -31,22 +23,15 @@ const SimpleInput = (props) => {
 
     setEnteredNameTouched(true);
 
-    if (enteredName.trim() === "") {
-      setEnteredNameIsValid(false);
+    // formSubmissionHandler 함수가 컴포넌트가 리랜더링 될 때마다 다시 생성되기 때문에, enteredNameIsValid의 최신값을 가져오기 때문에 아래와 같은 식이 가능하다.
+    if (!enteredNameIsValid) {
       return;
     }
 
-    setEnteredNameIsValid(true);
-
     console.log(enteredName);
     setEnteredName("");
-
-    const enteredValue = nameInputRef.current.value;
-    console.log(enteredValue);
-    // nameInputRef.current.value = ""; 좋지 않은 방법. 리액트로만 DOM을 조작해야 한다.
+    setEnteredNameTouched(false);
   };
-
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const nameInputClasses = nameInputIsInvalid ? "form-control invalid" : "form-control";
 
@@ -55,7 +40,6 @@ const SimpleInput = (props) => {
       <div className={nameInputClasses}>
         <label htmlFor="name">Your Name</label>
         <input
-          ref={nameInputRef}
           type="text"
           id="name"
           onChange={nameInputChangeHandler}
