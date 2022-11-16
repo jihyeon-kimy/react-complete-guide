@@ -1,31 +1,32 @@
 import { useState } from "react";
 
-const useInput = (checkValidation) => {
-  const [enteredInput, setEnteredInput] = useState("");
-  const [enteredInputTouched, setEnteredInputTouched] = useState(false);
+const useInput = (validateValue) => {
+  const [enteredValue, setEnteredValue] = useState("");
+  const [isTouched, setIsTouched] = useState(false);
 
-  const enteredInputIsValid = checkValidation(enteredInput);
-  const InputIsInvalid = !enteredInputIsValid && enteredInputTouched;
+  const valueIsValid = validateValue(enteredValue);
+  const hasError = !valueIsValid && isTouched;
 
-  const InputChangeHandler = (event) => {
-    setEnteredInput(event.target.value);
+  const valueChangeHandler = (event) => {
+    setEnteredValue(event.target.value);
   };
 
-  const InputBlurHandler = (event) => {
-    setEnteredInputTouched(true);
+  const inputBlurHandler = (event) => {
+    setIsTouched(true);
   };
 
-  const InputClasses = InputIsInvalid ? "form-control invalid" : "form-control";
+  const reset = () => {
+    setEnteredValue("");
+    setIsTouched(false);
+  };
 
   return {
-    InputChangeHandler,
-    InputBlurHandler,
-    InputClasses,
-    enteredInput,
-    enteredInputIsValid,
-    InputIsInvalid,
-    setEnteredInput,
-    setEnteredInputTouched,
+    value: enteredValue,
+    isValid: valueIsValid,
+    hasError,
+    valueChangeHandler,
+    inputBlurHandler,
+    reset,
   };
 };
 

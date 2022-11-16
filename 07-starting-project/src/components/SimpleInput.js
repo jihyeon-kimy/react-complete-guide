@@ -2,35 +2,25 @@ import useInput from "../hooks/use-input";
 import Input from "./Input";
 
 const SimpleInput = (props) => {
-  const checkNameValidation = (data) => {
-    return data.trim() !== "";
-  };
-
-  const checkEmailValidation = (data) => {
-    return data.includes("@");
-  };
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput,
+  } = useInput((value) => value.trim() !== "");
+  // 여기서 인라인함수로 정의만 되고 실행되지 않으며, useInput에 입력된다.
+  // 이는 validateValue 매개변수로 전해지고, 여기서 정의된 이 함수가 실제로 호출된 곳에서 실행된다.
 
   const {
-    InputChangeHandler: nameInputChangeHandler,
-    InputBlurHandler: nameInputBlurHandler,
-    InputClasses: nameInputClasses,
-    enteredInput: enteredName,
-    enteredInputIsValid: enteredNameIsValid,
-    InputIsInvalid: nameInputIsInvalid,
-    setEnteredInput: setEnteredName,
-    setEnteredInputTouched: setEnteredNameTouched,
-  } = useInput(checkNameValidation);
-
-  const {
-    InputChangeHandler: emailInputChangeHandler,
-    InputBlurHandler: emailInputBlurHandler,
-    InputClasses: emailInputClasses,
-    enteredInput: enteredEmail,
-    enteredInputIsValid: enteredEmailIsValid,
-    InputIsInvalid: emailInputIsInvalid,
-    setEnteredInput: setEnteredEmail,
-    setEnteredInputTouched: setEnteredEmailTouched,
-  } = useInput(checkEmailValidation);
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailInputHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmailInput,
+  } = useInput((value) => value.includes("@"));
 
   let formIsValid = false;
 
@@ -41,19 +31,18 @@ const SimpleInput = (props) => {
   const formSubmissionHandler = (event) => {
     event.preventDefault();
 
-    setEnteredNameTouched(true);
-    setEnteredEmailTouched(true);
-
-    if (!enteredNameIsValid) {
+    if (!enteredNameIsValid || !enteredEmailIsValid) {
       return;
     }
 
     console.log(enteredName);
-    setEnteredName("");
-    setEnteredEmail("");
-    setEnteredNameTouched(false);
-    setEnteredEmailTouched(false);
+    resetNameInput();
+    resetEmailInput();
   };
+
+  const nameInputClasses = nameInputHasError ? "form-control invalid" : "form-control";
+
+  const emailInputClasses = emailInputHasError ? "form-control invalid" : "form-control";
 
   return (
     <form onSubmit={formSubmissionHandler}>
@@ -61,20 +50,20 @@ const SimpleInput = (props) => {
         className={nameInputClasses}
         id="name"
         label="Your Name"
-        onChange={nameInputChangeHandler}
-        onBlur={nameInputBlurHandler}
+        onChange={nameChangeHandler}
+        onBlur={nameBlurHandler}
         value={enteredName}
-        inputIsInvalid={nameInputIsInvalid}
+        inputIsInvalid={nameInputHasError}
         errorText="Name must not be empty"
       />
       <Input
         className={emailInputClasses}
         id="email"
         label="Your Email"
-        onChange={emailInputChangeHandler}
-        onBlur={emailInputBlurHandler}
+        onChange={emailChangeHandler}
+        onBlur={emailBlurHandler}
         value={enteredEmail}
-        inputIsInvalid={emailInputIsInvalid}
+        inputIsInvalid={emailInputHasError}
         errorText="Name must include @"
       />
       <div className="form-actions">
