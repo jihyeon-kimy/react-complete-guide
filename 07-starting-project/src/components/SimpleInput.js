@@ -1,43 +1,48 @@
-import { useState } from "react";
+import useInput from "../hooks/use-input";
+import Input from "./Input";
 
 const SimpleInput = (props) => {
-  const [enteredName, setEnteredName] = useState("");
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+  const checkNameValidation = (data) => {
+    return data.trim() !== "";
+  };
 
-  const enteredNameIsValid = enteredName.trim() !== "";
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+  const checkEmailValidation = (data) => {
+    return data.includes("@");
+  };
 
-  // 전체 양식을 유효성 검사할 때에 useEffect를 사용할 필요가 없다.
-  // 입력에 따라 재렌더링될 것이기 때문에.state 파생이다.
-  // enterdNameIsValid와 결국 같다.
+  const {
+    InputChangeHandler: nameInputChangeHandler,
+    InputBlurHandler: nameInputBlurHandler,
+    InputClasses: nameInputClasses,
+    enteredInput: enteredName,
+    enteredInputIsValid: enteredNameIsValid,
+    InputIsInvalid: nameInputIsInvalid,
+    setEnteredInput: setEnteredName,
+    setEnteredInputTouched: setEnteredNameTouched,
+  } = useInput(checkNameValidation);
+
+  const {
+    InputChangeHandler: emailInputChangeHandler,
+    InputBlurHandler: emailInputBlurHandler,
+    InputClasses: emailInputClasses,
+    enteredInput: enteredEmail,
+    enteredInputIsValid: enteredEmailIsValid,
+    InputIsInvalid: emailInputIsInvalid,
+    setEnteredInput: setEnteredEmail,
+    setEnteredInputTouched: setEnteredEmailTouched,
+  } = useInput(checkEmailValidation);
+
   let formIsValid = false;
 
-  if (enteredNameIsValid) {
+  if (enteredNameIsValid && enteredEmailIsValid) {
     formIsValid = true;
   }
-
-  // useState와 usEffect를 사용하지 않아도 된다.
-  // const [formIsValid, setFormIsValid] = useState(false);
-  // useEffect(() => {
-  //   if (enteredNameIsValid) {
-  //     setFormIsValid(true);
-  //   } else {
-  //     setFormIsValid(false);
-  //   }
-  // }, [enteredNameIsValid]);
-
-  const nameInputChangeHandler = (event) => {
-    setEnteredName(event.target.value);
-  };
-
-  const nameInputBlurHandler = (event) => {
-    setEnteredNameTouched(true);
-  };
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
 
     setEnteredNameTouched(true);
+    setEnteredEmailTouched(true);
 
     if (!enteredNameIsValid) {
       return;
@@ -45,24 +50,33 @@ const SimpleInput = (props) => {
 
     console.log(enteredName);
     setEnteredName("");
+    setEnteredEmail("");
     setEnteredNameTouched(false);
+    setEnteredEmailTouched(false);
   };
-
-  const nameInputClasses = nameInputIsInvalid ? "form-control invalid" : "form-control";
 
   return (
     <form onSubmit={formSubmissionHandler}>
-      <div className={nameInputClasses}>
-        <label htmlFor="name">Your Name</label>
-        <input
-          type="text"
-          id="name"
-          onChange={nameInputChangeHandler}
-          onBlur={nameInputBlurHandler}
-          value={enteredName}
-        />
-        {nameInputIsInvalid && <p className="error-text">Name must not be empty</p>}
-      </div>
+      <Input
+        className={nameInputClasses}
+        id="name"
+        label="Your Name"
+        onChange={nameInputChangeHandler}
+        onBlur={nameInputBlurHandler}
+        value={enteredName}
+        inputIsInvalid={nameInputIsInvalid}
+        errorText="Name must not be empty"
+      />
+      <Input
+        className={emailInputClasses}
+        id="email"
+        label="Your Email"
+        onChange={emailInputChangeHandler}
+        onBlur={emailInputBlurHandler}
+        value={enteredEmail}
+        inputIsInvalid={emailInputIsInvalid}
+        errorText="Name must include @"
+      />
       <div className="form-actions">
         <button disabled={!formIsValid}>Submit</button>
       </div>
