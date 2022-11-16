@@ -1,14 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const SimpleInput = (props) => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
-  // const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
-  // 상수로 변경하여 리팩토링할 수 있다. enteredNameIsValid는 enteredName라는 상태로부터 얻어낼 수 있기 때문이다. enteredName과 enteredNameTouched이 바뀔 때마다 전체 컴포넌트가 다시 실행되기 때문에, enteredNameIsValid는 최신 상태를 반영하게 된다.
-  // 처음에 작성했던 if(event.target.value.trim() !== ""){setEnteredNameIsValid(true);} / if(enteredName.trim() === ""){setEnteredNameIsValid(false);} 모두 생략가능
   const enteredNameIsValid = enteredName.trim() !== "";
   const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+
+  // 전체 양식을 유효성 검사할 때에 useEffect를 사용할 필요가 없다.
+  // 입력에 따라 재렌더링될 것이기 때문에.state 파생이다.
+  // enterdNameIsValid와 결국 같다.
+  let formIsValid = false;
+
+  if (enteredNameIsValid) {
+    formIsValid = true;
+  }
+
+  // useState와 usEffect를 사용하지 않아도 된다.
+  // const [formIsValid, setFormIsValid] = useState(false);
+  // useEffect(() => {
+  //   if (enteredNameIsValid) {
+  //     setFormIsValid(true);
+  //   } else {
+  //     setFormIsValid(false);
+  //   }
+  // }, [enteredNameIsValid]);
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
@@ -23,7 +39,6 @@ const SimpleInput = (props) => {
 
     setEnteredNameTouched(true);
 
-    // formSubmissionHandler 함수가 컴포넌트가 리랜더링 될 때마다 다시 생성되기 때문에, enteredNameIsValid의 최신값을 가져오기 때문에 아래와 같은 식이 가능하다.
     if (!enteredNameIsValid) {
       return;
     }
@@ -49,7 +64,7 @@ const SimpleInput = (props) => {
         {nameInputIsInvalid && <p className="error-text">Name must not be empty</p>}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
