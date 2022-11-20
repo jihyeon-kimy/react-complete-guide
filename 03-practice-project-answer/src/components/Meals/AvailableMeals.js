@@ -6,40 +6,63 @@ import MealItem from "./MealItem/MealItem";
 
 const AvailalbeMeals = () => {
   const [meals, setMeals] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // 컴포넌트가 렌더링될 때 항상 이 컴포넌트 안에서 로딩 데이터로 시작하기 때문에 초기값을 true로 해주어도 괜찮다.
+  const [httpError, setHttpError] = useState(null); // null을 설정해서 처음에 값을 갖지 않는다는 목적을 더 분명히 알린다.
 
-  const fetchMealHandler = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
+  useEffect(() => {
+    const fetchMeals = async () => {
       const response = await fetch(
-        "https://react-http-6df0d-default-rtdb.firebaseio.com/meals.json"
+        "https://react-http-6df0d-default-rtdb.firebaseio.com/meals"
       );
 
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
+      const responseData = await response.json();
 
-      const data = await response.json();
+      const loadedMeals = [];
 
-      const keysOfData = Object.keys(data);
-      const valuesOfData = Object.values(data);
-      const transformedMeals = valuesOfData.map((data, idx) => {
-        return { id: keysOfData[idx], ...data };
-      });
+      for (const key in responseData) {
+        loadedMeals.push({
+          id: key,
+          name: responseData[key].name,
+          description: responseData[key].description,
+          price: responseData[key].price,
+        });
+      }
+      setMeals(loadedMeals);
+      setIsLoading(false);
+    };
 
-      setMeals(transformedMeals);
-    } catch (error) {
-      setError(error.message);
-    }
+    // fetch가 실패했음에도, Loading... 이 계속 표시되는 문제
+    // try {
+    //   fetchMeals();
+    // } catch (error) {
+    //   setIsLoading(false);
+    //   setHttpError(error.message);
+    // }
 
-    setIsLoading(false);
+    fetchMeals().catch((error) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
   }, []);
 
-  useEffect(() => {
-    fetchMealHandler();
-  }, [fetchMealHandler]);
+  if (isLoading) {
+    return (
+      <section className={classes.MealsLoading}>
+        <p>Loading...</p>
+      </section>
+    );
+  }
+
+  if (httpError) {
+    return (
+      <section className={classes.MealsError}>
+        <p>{httpError}</p>
+      </section>
+    );
+  }
 
   const mealsList = meals.map((meal) => (
     <MealItem
@@ -53,14 +76,14 @@ const AvailalbeMeals = () => {
 
   return (
     <section className={classes.meals}>
-      {isLoading && <p>Loading...</p>}
+      {/* {isLoading && <p>Loading...</p>}
       {!isLoading && error && <p>{error}</p>}
       {!isLoading && mealsList.length === 0 && <p>Found no meals</p>}
-      {!isLoading && mealsList.length > 0 && (
-        <Card>
-          <ul>{mealsList}</ul>
-        </Card>
-      )}
+      {!isLoading && mealsList.length > 0 && ( */}
+      <Card>
+        <ul>{mealsList}</ul>
+      </Card>
+      {/* )} */}
     </section>
   );
 };
