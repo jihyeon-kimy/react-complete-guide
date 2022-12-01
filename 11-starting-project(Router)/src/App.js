@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom"; // Route는 실제 컴포넌트가 된다. 특정 경로를 정의한 다음 URL에서 경로가 활성화될 때 로드되어야 하는 리액트 컴포넌트를 정의하는 컴포넌트이다.
+import { Route, Switch, Redirect } from "react-router-dom"; // Route는 실제 컴포넌트가 된다. 특정 경로를 정의한 다음 URL에서 경로가 활성화될 때 로드되어야 하는 리액트 컴포넌트를 정의하는 컴포넌트이다.
 import MainHeader from "./components/MainHeader";
 import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
@@ -21,6 +21,10 @@ function App() {
           </Route>
           <Route path="/products/:productId">
             <ProductDetail />
+          </Route>
+          {/* 경로를 잘못 입력했을 때를 위한 리다이렉트 페이지를 만든다.  */}
+          <Route path="*">
+            <Redirect to="/welcome" />
           </Route>
         </Switch>
       </main>
