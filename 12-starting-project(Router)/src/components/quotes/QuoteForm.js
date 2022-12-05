@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Prompt } from "react-router-dom";
+// import { Prompt } from "react-router-dom";
 
 import Card from "../ui/Card";
 import LoadingSpinner from "../ui/LoadingSpinner";
@@ -36,14 +36,14 @@ const QuoteForm = (props) => {
 
   return (
     <>
-      <Prompt
+      {/* <Prompt
         when={isEntering}
         message={
           (location) =>
             "Are you sure you want to leave? All your entered data will be lost"
           // 우리가 가고자 하는 페이지에 대한 정보를 담고 있는 위치 객체를 얻기 때문에. 일종의 함수
         }
-      />
+      /> */}
       <Card>
         <form
           onFocus={formFocusHandler}

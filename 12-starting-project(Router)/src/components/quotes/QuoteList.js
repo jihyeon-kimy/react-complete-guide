@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import QuoteItem from "./QuoteItem";
 import classes from "./QuoteList.module.css";
@@ -15,7 +15,7 @@ const sortQuotes = (quotes, ascending) => {
 };
 
 const QuoteList = (props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   // 페이지 history를 바꿀 수 있다. 즉 URL도 바꿀 수 있다.
   const location = useLocation();
 
@@ -27,7 +27,7 @@ const QuoteList = (props) => {
   // 쿼리 매개 변수를 바꿀 때마다 이 컴포넌트가 재실행될테니, 쿼리 매개 변수가 바뀔 때마다 sortedQuotes를 받을 수 있을 것.
 
   const ChangeSortingHandler = () => {
-    history.push(`${location.pathname}?sort=${isSortingAscending ? "desc" : "asc"}`); // location.push가 리랜더링 시킨다. 페이지를 push할 때, 지금 보고 있는 페이지일지라도 페이지 컴포넌트는 재평가된다.(react router는 history를 바꿨다고 봐서 페이지를 다시 렌더링하고, 그걸 띄운다.)
+    navigate(`${location.pathname}?sort=${isSortingAscending ? "desc" : "asc"}`); // location.push가 리랜더링 시킨다. 페이지를 push할 때, 지금 보고 있는 페이지일지라도 페이지 컴포넌트는 재평가된다.(react router는 history를 바꿨다고 봐서 페이지를 다시 렌더링하고, 그걸 띄운다.)
 
     // 아래처럼 작성할 수 도 있다.
     // history.push({
